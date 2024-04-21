@@ -1,0 +1,6 @@
+run:
+  # defaul concurrency is a available CPU number
+  concurrency: 4
+
+  # timeout for analysis, e.g. 30s, 5m, defaul is 1m
+  timeout: 5m
