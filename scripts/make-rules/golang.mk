@@ -30,14 +30,12 @@ go.echo: ## Echo GoLang environment variables.
 	@echo "GOBIN: $(GOBIN)"
 	@echo "COMMANDS: $(COMMANDS)"
 	@echo "KRM_ROOT: $(KRM_ROOT)"
+	$(shell $(GO) version)":
 
-
-
-
-$(shell $(GO) version)":
 .PHONY: go.version
 go.version: ## Show GoLang version.
 	@echo "GoLang version: $(shell go version)"
+
 
 .PHONY: go.build.%
 go.build.%:  ## Build specified applications with platform, os and arch.
@@ -54,12 +52,10 @@ go.build.%:  ## Build specified applications with platform, os and arch.
 		echo "===========> Done building binary $(COMMAND) $(VERSION) for $(OS) $(ARCH)" ; \
 	fi
 
+
 .PHONY: go.build
-go.build:
-	@echo "=== $(addprefix $(PLATFORM)., $(BINS))"
-	@echo "=== $(addprefix go.build., $(addprefix $(PLATFORM)., $(BINS)))"
-	@echo "打印下面执行的命令: "
-	$(addprefix go.build., $(addprefix $(PLATFORM)., $(BINS))) ## Build all applications.
+go.build: $(addprefix go.build., $(addprefix $(PLATFORM)., $(BINS))) ## Build all applications.
+
 
 
 .PHONY: go.build.multiarch
