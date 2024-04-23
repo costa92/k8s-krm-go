@@ -5,6 +5,6 @@ import (
 )
 
 // NewApp App is the main application
-func NewApp() *app.App {
+func NewApp(name string) *app.App {
 	return &app.App{}
 }
