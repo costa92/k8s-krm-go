@@ -10,6 +10,10 @@ var _ app.CliOptions = (*Options)(nil)
 type Options struct {
 }
 
+func NewOptions() *Options {
+	return &Options{}
+}
+
 func (o Options) Flags() cliflag.NamedFlagSets {
 	//TODO implement me
 	panic("implement me")
