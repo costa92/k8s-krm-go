@@ -43,6 +43,7 @@ go.build.%:  ## Build specified applications with platform, os and arch.
 	$(eval PLATFORM := $(word 1,$(subst ., ,$*)))
 	$(eval OS := $(word 1,$(subst _, ,$(PLATFORM))))
 	$(eval ARCH := $(word 2,$(subst _, ,$(PLATFORM))))
+	@echo "{COMMAND}={COMMAND}"
 	#@ONEX_GIT_VERSION=$(VERSION) $(SCRIPTS_DIR)/build.sh $(COMMAND) $(PLATFORM)
 	@if grep -q "func main()" $(KRM_ROOT)/cmd/$(COMMAND)/*.go &>/dev/null; then \
 		echo "===========> Building binary $(COMMAND) $(VERSION) for $(OS) $(ARCH)" ; \
