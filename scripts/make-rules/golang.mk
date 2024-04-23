@@ -30,7 +30,6 @@ go.echo: ## Echo GoLang environment variables.
 	@echo "GOBIN: $(GOBIN)"
 	@echo "COMMANDS: $(COMMANDS)"
 	@echo "KRM_ROOT: $(KRM_ROOT)"
-	$(shell $(GO) version)":
 
 .PHONY: go.version
 go.version: ## Show GoLang version.
@@ -43,7 +42,7 @@ go.build.%:  ## Build specified applications with platform, os and arch.
 	$(eval PLATFORM := $(word 1,$(subst ., ,$*)))
 	$(eval OS := $(word 1,$(subst _, ,$(PLATFORM))))
 	$(eval ARCH := $(word 2,$(subst _, ,$(PLATFORM))))
-	@echo "{COMMAND}={COMMAND}"
+	@echo "COMMAND=$(COMMAND)"
 	#@ONEX_GIT_VERSION=$(VERSION) $(SCRIPTS_DIR)/build.sh $(COMMAND) $(PLATFORM)
 	@if grep -q "func main()" $(KRM_ROOT)/cmd/$(COMMAND)/*.go &>/dev/null; then \
 		echo "===========> Building binary $(COMMAND) $(VERSION) for $(OS) $(ARCH)" ; \
@@ -53,7 +52,7 @@ go.build.%:  ## Build specified applications with platform, os and arch.
 		echo "===========> Done building binary $(COMMAND) $(VERSION) for $(OS) $(ARCH)" ; \
 	fi
 
-
+# 生成所有的目标  执行上面的命令 go.build.%
 .PHONY: go.build
 go.build: $(addprefix go.build., $(addprefix $(PLATFORM)., $(BINS))) ## Build all applications.
 
