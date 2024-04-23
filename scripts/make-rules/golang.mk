@@ -17,7 +17,7 @@ ifeq (${COMMANDS},)
 endif
 
 ifeq (${BINS},)
-  $(error Could not determine BINS, set ONEX_ROOT or run in source dir)
+  $(error Could not determine BINS, set KRM_ROOT or run in source dir)
 endif
 
 
@@ -55,7 +55,6 @@ go.build.%:  ## Build specified applications with platform, os and arch.
 # 生成所有的目标  执行上面的命令 go.build.%
 .PHONY: go.build
 go.build: $(addprefix go.build., $(addprefix $(PLATFORM)., $(BINS))) ## Build all applications.
-
 
 
 .PHONY: go.build.multiarch
