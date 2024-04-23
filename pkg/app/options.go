@@ -7,6 +7,8 @@ import (
 	"k8s.io/client-go/util/homedir"
 	cliflag "k8s.io/component-base/cli/flag"
 
+	"github.com/costa92/k8s-krm-go/pkg/log"
+	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -53,6 +55,25 @@ func AddConfigFlag(fs *pflag.FlagSet, name string, watch bool) {
 		}
 
 		if err := viper.ReadInConfig(); err != nil {
+			log.Debugw("Failed  reading config file ", "error", err, "file", cfgFile)
+		}
+
+		if watch {
+			viper.WatchConfig()
+			viper.OnConfigChange(func(e fsnotify.Event) {
+				log.Debugw("Config file changed", "file", e.Name)
+			})
 		}
 	})
+}
+
+func PrintConfig() {
+	for _, key := range viper.AllKeys() {
+		log.Debugw("Config", "key", key, "value", viper.Get(key))
+	}
+}
+
+func init() {
+	pflag.StringVarP(&cfgFile, configFlagName, "c", cfgFile, "Read configuration from specified `FILE`, "+
+		"support JSON, TOML, YAML, HCL, or Java properties formats.")
 }
