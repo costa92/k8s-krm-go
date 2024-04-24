@@ -2,6 +2,10 @@ package app
 
 import (
 	"fmt"
+	"github.com/costa92/k8s-krm-go/pkg/log"
+	cliflag "k8s.io/component-base/cli/flag"
+	"k8s.io/component-base/term"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -127,10 +131,49 @@ func (a *App) buildCommand() {
 		Short: a.shortDesc,
 		Long:  a.description,
 		RunE:  a.runCommand,
-		Args:  a.args,
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			return nil
+		},
+		Args: a.args,
 	}
 
+	if !cmd.SilenceUsage { // 如果不是静默模式
+		cmd.SilenceUsage = true
+		// SetFlagErrorFunc sets the function that will be called if an error occurs while parsing the flags.
+		cmd.SetFlagErrorFunc(func(c *cobra.Command, err error) error { // 设置 flag 解析错误时的回调函数
+			c.SilenceUsage = false
+			return err
+		})
+	}
+
+	cmd.SilenceErrors = true
+	cmd.SetOutput(os.Stdout)
+	cmd.SetErr(os.Stderr)        // SetErr sets the destination for error messages written by the command.
+	cmd.Flags().SortFlags = true // SortFlags sets the flag sorting function.
+
+	var fss cliflag.NamedFlagSets
+	if a.options != nil {
+		fss = a.options.Flags()
+	}
+	// todo version
+
+	if !a.noConfig { // 如果不是 noConfig 模式
+		AddConfigFlag(fss.FlagSet("global"), a.name, a.watch)
+	}
+	// Add the flags to the command
+	for _, f := range fss.FlagSets {
+		cmd.Flags().AddFlagSet(f) // AddFlagSet adds all the flags in the FlagSet to the command.
+	}
+	// SetUsageFunc sets the function that will be called if an error occurs while parsing the flags.
+	cols, _, _ := term.TerminalSize(cmd.OutOrStdout()) // TerminalSize returns the dimensions of the given terminal.
+	cliflag.SetUsageAndHelpFunc(cmd, fss, cols)        //
+
 	a.cmd = cmd
+}
+
+func (a *App) Run() error {
+	a.buildCommand()
+	return a.cmd.Execute()
 }
 
 // Run runs the app
@@ -139,12 +182,62 @@ func (a *App) runCommand(cmd *cobra.Command, args []string) error {
 	if err := viper.BindPFlags(cmd.Flags()); err != nil {
 		return err
 	}
-
 	if a.options != nil {
+		// complete the configuration
+		if err := viper.BindPFlags(cmd.Flags()); err != nil {
+			return err
+		}
+		// complete the configuration
+		if err := a.options.Complete(); err != nil {
+			return err
+		}
+		// validate the configuration
 		if err := a.options.Validate(); err != nil {
 			return err
 		}
 	}
+	// 初始化日志
+	log.Init(logOptions())
+	defer log.Sync() // sync 将缓存中的日志刷新到硬盘文件
 
-	return nil
+	if !a.silence {
+		log.Infow("Starting the app", "name", a.name)
+		log.Infow("Golang settings", "GOGC", os.Getenv("GOGC"), "GOMAXPROCS", os.Getenv("GOMAXPROCS"), "GOTRACEBACK", os.Getenv("GOTRACEBACK"))
+
+		if !a.noConfig {
+			PrintConfig() // 打印配置
+		} else if a.options != nil {
+			cliflag.PrintFlags(cmd.Flags()) // 打印 flags
+		}
+	}
+
+	if a.healthCheckFunc != nil {
+		if err := a.healthCheckFunc(); err != nil {
+			return err
+		}
+	}
+	return a.run()
+}
+
+// logOptions 从 viper 中读取日志配置，构建 `*log.Options` 并返回.
+// 注意：`viper.Get<Type>()` 中 key 的名字需要使用 `.` 分割，以跟 YAML 中保持相同的缩进.
+func logOptions() *log.Options {
+	return &log.Options{
+		DisableCaller:     viper.GetBool("log.disable-caller"),
+		Level:             viper.GetString("log.level"),
+		DisableStacktrace: viper.GetBool("log.disable-stacktrace"),
+		Format:            viper.GetString("log.format"),
+		OutputPaths:       viper.GetStringSlice("log.output-paths"),
+		EnableColor:       viper.GetBool("log.enable-color"),
+	}
+}
+
+// 从 viper 中读取配置，构建 `*log.Options` 并返回.
+func init() {
+	viper.SetDefault("log.disable-caller", false)
+	viper.SetDefault("log.level", "info")
+	viper.SetDefault("log.disable-stacktrace", false)
+	viper.SetDefault("log.format", "json")
+	viper.SetDefault("log.output-paths", []string{"stdout"})
+	viper.SetDefault("log.enable-color", false)
 }
