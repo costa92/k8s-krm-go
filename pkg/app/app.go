@@ -2,10 +2,14 @@ package app
 
 import (
 	"fmt"
+	"os"
+	"runtime"
+	"strings"
+
 	"github.com/costa92/k8s-krm-go/pkg/log"
+	"k8s.io/component-base/cli"
 	cliflag "k8s.io/component-base/cli/flag"
 	"k8s.io/component-base/term"
-	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -112,22 +116,23 @@ func WithWatch() Option {
 }
 
 func NewApp(name, shortDesc string, opts ...Option) *App {
-	app := &App{
+	a := &App{
 		name:      name,
 		run:       func() error { return nil },
 		shortDesc: shortDesc,
 	}
 	for _, opt := range opts {
-		opt(app)
+		opt(a)
 	}
 
-	//  a.buildCommand()
-	return app
+	a.buildCommand()
+
+	return a
 }
 
 func (a *App) buildCommand() {
 	cmd := &cobra.Command{
-		Use:   a.name,
+		Use:   formatBaseName(a.name),
 		Short: a.shortDesc,
 		Long:  a.description,
 		RunE:  a.runCommand,
@@ -156,7 +161,6 @@ func (a *App) buildCommand() {
 		fss = a.options.Flags()
 	}
 	// todo version
-
 	if !a.noConfig { // 如果不是 noConfig 模式
 		AddConfigFlag(fss.FlagSet("global"), a.name, a.watch)
 	}
@@ -171,9 +175,8 @@ func (a *App) buildCommand() {
 	a.cmd = cmd
 }
 
-func (a *App) Run() error {
-	a.buildCommand()
-	return a.cmd.Execute()
+func (a *App) Run() {
+	os.Exit(cli.Run(a.cmd))
 }
 
 // Run runs the app
@@ -217,6 +220,18 @@ func (a *App) runCommand(cmd *cobra.Command, args []string) error {
 		}
 	}
 	return a.run()
+}
+
+func (a *App) Command() *cobra.Command {
+	return a.cmd
+}
+
+func formatBaseName(name string) string {
+	if runtime.GOOS == "windows" {
+		name = strings.ToLower(name)
+		name = strings.TrimSuffix(name, ".exe")
+	}
+	return name
 }
 
 // logOptions 从 viper 中读取日志配置，构建 `*log.Options` 并返回.

@@ -73,6 +73,7 @@ func PrintConfig() {
 	}
 }
 
+// NewOptions creates a new Options
 func init() {
 	pflag.StringVarP(&cfgFile, configFlagName, "c", cfgFile, "Read configuration from specified `FILE`, "+
 		"support JSON, TOML, YAML, HCL, or Java properties formats.")

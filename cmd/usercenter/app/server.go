@@ -5,10 +5,29 @@ import (
 	"github.com/costa92/k8s-krm-go/pkg/app"
 )
 
+// Define the description of the command.
+const commandDesc = `The usercenter server is used to manage users, keys, fees, etc.`
+
 // NewApp App is the main application
 func NewApp(name string) *app.App {
-	_ = options.NewOptions()
-	return &app.App{
-		//options: opts,
+	opts := options.NewOptions()
+	application := app.NewApp(
+		name,
+		"Launch the usercenter service",
+		app.WithDescription("Launch the usercenter service"),
+		app.WithOptions(opts),
+		app.WithDefaultValidArgs(),
+		app.WithRunFunc(run(opts)),
+	)
+	return application
+}
+
+func run(opts *options.Options) app.RunFunc {
+	return func() error {
+		cfg, err := opts.Config()
+		if err := nil {
+			return err
+		}
+		return nil
 	}
 }

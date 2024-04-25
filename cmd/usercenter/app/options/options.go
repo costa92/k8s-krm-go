@@ -28,3 +28,8 @@ func (o Options) Validate() error {
 	//TODO implement me
 	panic("implement me")
 }
+
+func (o *Options) Config() (interface{}, error) {
+	//TODO implement me
+	panic("implement me")
+}
