@@ -43,21 +43,24 @@ func AddConfigFlag(fs *pflag.FlagSet, name string, watch bool) {
 
 	// Bind the flag to viper
 	cobra.OnInitialize(func() {
+
 		if cfgFile != "" {
 			viper.SetConfigFile(cfgFile)
 		} else {
+			viper.SetConfigType("yaml")
 			viper.AddConfigPath(".")
 			if names := strings.Split(name, "-"); len(names) > 1 {
 				viper.AddConfigPath(filepath.Join(homedir.HomeDir(), ","+names[0]))
 				viper.AddConfigPath(filepath.Join("/etc", "."+names[0]))
+			} else {
+				viper.AddConfigPath(filepath.Join("configs/appconfig/"))
 			}
 			viper.SetConfigName(name)
 		}
 
 		if err := viper.ReadInConfig(); err != nil {
-			log.Debugw("Failed  reading config file ", "error", err, "file", cfgFile)
+			log.Fatalw("Failed  reading config file ", "error", err, "file", cfgFile)
 		}
-
 		if watch {
 			viper.WatchConfig()
 			viper.OnConfigChange(func(e fsnotify.Event) {

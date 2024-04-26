@@ -35,9 +35,12 @@ func run(opts *options.Options) app.RunFunc {
 
 // Run the application
 func Run(cfg *usercenter.Config, stopCh <-chan struct{}) error {
-	server, err := cfg.Complete().New(stopCh)
-	if err != nil {
-		return err
+	if cfg != nil {
+		server, err := cfg.Complete().New(stopCh)
+		if err != nil {
+			return err
+		}
+		return server.Run(stopCh)
 	}
-	return server.Run(stopCh)
+	return nil
 }

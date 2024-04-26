@@ -206,7 +206,6 @@ func (a *App) runCommand(cmd *cobra.Command, args []string) error {
 	if !a.silence {
 		log.Infow("Starting the app", "name", a.name)
 		log.Infow("Golang settings", "GOGC", os.Getenv("GOGC"), "GOMAXPROCS", os.Getenv("GOMAXPROCS"), "GOTRACEBACK", os.Getenv("GOTRACEBACK"))
-
 		if !a.noConfig {
 			PrintConfig() // 打印配置
 		} else if a.options != nil {

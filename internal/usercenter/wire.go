@@ -1,4 +1,9 @@
+//go:build wireinject
+// +build wireinject
+
 package usercenter
+
+//go:generate go run github.com/google/wire/cmd/wire
 
 import (
 	"github.com/costa92/k8s-krm-go/internal/pkg/bootstrap"
@@ -6,11 +11,14 @@ import (
 	"github.com/google/wire"
 )
 
-type runFunc func()
+// wireApp creates a new kratos application with the necessary dependencies.
+func wireApp(
+	bootstrap.AppInfo,
+) (*kratos.App, func(), error) {
 
-func wireApp(bootstrap.AppInfo) (*kratos.App, runFunc, error) {
 	wire.Build(
 		bootstrap.ProviderSet,
 	)
+
 	return nil, nil, nil
 }
