@@ -1,6 +1,17 @@
 package bootstrap
 
-import "os"
+import (
+	"os"
+
+	"github.com/go-kratos/kratos/v2"
+	krtlog "github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/registry"
+	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/google/wire"
+)
+
+// ProviderSet is the provider set for the bootstrap
+var ProviderSet = wire.NewSet(wire.Struct(new(AppConfig), "*"), NewLogger, NewApp)
 
 // AppInfo is the information of the application
 
@@ -22,4 +33,24 @@ func NewAppInfo(id, name, version string) AppInfo {
 		Version:  version,
 		Metadata: map[string]string{},
 	}
+}
+
+// Config is the configuration of the application
+type AppConfig struct {
+	Info      AppInfo
+	Logger    krtlog.Logger
+	Registrar registry.Registrar
+}
+
+// NewApp creates a new kratos application
+func NewApp(appCfg AppConfig, servers ...transport.Server) *kratos.App {
+	return kratos.New(
+		kratos.ID(appCfg.Info.ID+"."+appCfg.Info.Name),
+		kratos.Name(appCfg.Info.Name),
+		kratos.Version(appCfg.Info.Version),
+		kratos.Metadata(appCfg.Info.Metadata),
+		kratos.Logger(appCfg.Logger),
+		kratos.Registrar(appCfg.Registrar),
+		kratos.Server(servers...),
+	)
 }
