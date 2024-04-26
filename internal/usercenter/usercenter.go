@@ -35,7 +35,6 @@ type Server struct {
 
 // Run runs the usercenter server
 func (s *Server) Run(stopCh <-chan struct{}) error {
-
 	log.Infof("Gracefully shutting down server ...")
 	return nil
 }
