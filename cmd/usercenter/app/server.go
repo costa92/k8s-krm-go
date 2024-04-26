@@ -23,20 +23,19 @@ func NewApp(name string) *app.App {
 	return application
 }
 
-func run(opts *options.Options)  app.RunFunc {
+func run(opts *options.Options) app.RunFunc {
 	return func() error {
 		cfg, err := opts.Config()
-		if err := nil {
+		if err != nil {
 			return err
 		}
-		return  
+		return Run(cfg, nil)
 	}
 }
 
-
 // Run the application
-func Run(cfg *usercenter.Config, stopCh <- chan struct{}) error {
-	server,err :=  cfg.Complete().New(stopCh)
+func Run(cfg *usercenter.Config, stopCh <-chan struct{}) error {
+	server, err := cfg.Complete().New(stopCh)
 	if err != nil {
 		return err
 	}

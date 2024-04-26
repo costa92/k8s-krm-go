@@ -3,6 +3,7 @@ package options
 import (
 	"github.com/costa92/k8s-krm-go/internal/usercenter"
 	"github.com/costa92/k8s-krm-go/pkg/app"
+	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 	cliflag "k8s.io/component-base/cli/flag"
 )
 
@@ -15,19 +16,18 @@ func NewOptions() *Options {
 	return &Options{}
 }
 
-func (o Options) Flags() cliflag.NamedFlagSets {
-	//TODO implement me
-	panic("implement me")
+func (o Options) Flags() (fss cliflag.NamedFlagSets) {
+
+	return fss
 }
 
 func (o Options) Complete() error {
-	//TODO implement me
-	panic("implement me")
+	return nil
 }
 
 func (o Options) Validate() error {
-	//TODO implement me
-	panic("implement me")
+	errs := []error{}
+	return utilerrors.NewAggregate(errs)
 }
 
 func (o *Options) ApplyTo(c *usercenter.Config) error {
