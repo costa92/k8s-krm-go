@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/costa92/k8s-krm-go/cmd/usercenter/app/options"
+	"github.com/costa92/k8s-krm-go/internal/usercenter"
 	"github.com/costa92/k8s-krm-go/pkg/app"
 )
 
@@ -22,12 +23,22 @@ func NewApp(name string) *app.App {
 	return application
 }
 
-func run(opts *options.Options) app.RunFunc {
+func run(opts *options.Options)  app.RunFunc {
 	return func() error {
 		cfg, err := opts.Config()
 		if err := nil {
 			return err
 		}
-		return nil
+		return  
 	}
+}
+
+
+// Run the application
+func Run(cfg *usercenter.Config, stopCh <- chan struct{}) error {
+	server,err :=  cfg.Complete().New(stopCh)
+	if err != nil {
+		return err
+	}
+	return server.Run(stopCh)
 }

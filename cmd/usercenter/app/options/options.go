@@ -1,6 +1,7 @@
 package options
 
 import (
+	"github.com/costa92/k8s-krm-go/internal/usercenter"
 	"github.com/costa92/k8s-krm-go/pkg/app"
 	cliflag "k8s.io/component-base/cli/flag"
 )
@@ -29,7 +30,14 @@ func (o Options) Validate() error {
 	panic("implement me")
 }
 
-func (o *Options) Config() (interface{}, error) {
-	//TODO implement me
-	panic("implement me")
+func (o *Options) ApplyTo(c *usercenter.Config) error {
+	return nil
+}
+
+func (o *Options) Config() (*usercenter.Config, error) {
+	c := &usercenter.Config{}
+	if err := o.ApplyTo(c); err != nil {
+		return nil, err
+	}
+	return c, nil
 }
