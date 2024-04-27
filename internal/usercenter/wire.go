@@ -7,6 +7,7 @@ package usercenter
 
 import (
 	"github.com/costa92/k8s-krm-go/internal/pkg/bootstrap"
+	"github.com/costa92/k8s-krm-go/internal/usercenter/server"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/google/wire"
 )
@@ -14,11 +15,10 @@ import (
 // wireApp creates a new kratos application with the necessary dependencies.
 func wireApp(
 	bootstrap.AppInfo,
+	*server.Config,
 ) (*kratos.App, func(), error) {
-
 	wire.Build(
 		bootstrap.ProviderSet,
 	)
-
 	return nil, nil, nil
 }

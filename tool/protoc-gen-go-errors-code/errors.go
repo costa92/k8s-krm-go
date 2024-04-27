@@ -1,0 +1,1 @@
+package protoc_gen_go_errors_code

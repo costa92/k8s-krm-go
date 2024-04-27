@@ -91,3 +91,7 @@ else
 	IMAGE_PLAT := $(PLATFORM)
 endif
 
+
+
+APIROOT ?= $(KRM_ROOT)/pkg/api
+APISROOT ?= $(KRM_ROOT)/pkg/apis

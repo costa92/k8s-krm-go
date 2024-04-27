@@ -1,10 +1,12 @@
 package usercenter
 
 import (
+	"github.com/costa92/k8s-krm-go/internal/usercenter/server"
 	"os"
 
 	"github.com/costa92/k8s-krm-go/internal/pkg/bootstrap"
 	"github.com/costa92/k8s-krm-go/pkg/log"
+	genericoptions "github.com/costa92/k8s-krm-go/pkg/options"
 	"github.com/go-kratos/kratos/v2"
 )
 
@@ -14,7 +16,7 @@ var (
 )
 
 type Config struct {
-	//TODO implement me
+	HTTPOptions *genericoptions.HTTPOptions
 }
 
 // completedConfig is a Config that has been completed with the necessary information
@@ -22,14 +24,17 @@ type completedConfig struct {
 	*Config
 }
 
-// NewConfig returns a new Config for the usercenter
+// Complete NewConfig returns a new Config for the usercenter
 func (cfg *Config) Complete() completedConfig {
 	return completedConfig{cfg}
 }
 
 func (c completedConfig) New(stopCh <-chan struct{}) (*Server, error) {
 	appInfo := bootstrap.NewAppInfo(ID, Name, "v0.0.1")
-	app, cleanup, err := wireApp(appInfo)
+	conf := &server.Config{
+		HTTP: *c.HTTPOptions,
+	}
+	app, cleanup, err := wireApp(appInfo, conf)
 	if err != nil {
 		return nil, err
 	}
@@ -37,6 +42,7 @@ func (c completedConfig) New(stopCh <-chan struct{}) (*Server, error) {
 	return &Server{app: app}, nil
 }
 
+// Server is the usercenter server
 type Server struct {
 	app *kratos.App
 }
