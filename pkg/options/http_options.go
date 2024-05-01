@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+var _ IOptions = (*HTTPOptions)(nil)
+
 type HTTPOptions struct {
 	Network string        `json:"network" mapstructure:"network"`
 	Addr    string        `json:"addr" mapstructure:"addr"`
@@ -14,7 +16,7 @@ type HTTPOptions struct {
 func NewHTTPOptions() *HTTPOptions {
 	return &HTTPOptions{
 		Network: "tcp",
-		Addr:    ":8080",
+		Addr:    ":8083",
 		Timeout: 30 * time.Second,
 	}
 }

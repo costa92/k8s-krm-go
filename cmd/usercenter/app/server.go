@@ -4,6 +4,7 @@ import (
 	"github.com/costa92/k8s-krm-go/cmd/usercenter/app/options"
 	"github.com/costa92/k8s-krm-go/internal/usercenter"
 	"github.com/costa92/k8s-krm-go/pkg/app"
+	genericapiserver "k8s.io/apiserver/pkg/server"
 )
 
 // Define the description of the command.
@@ -12,10 +13,8 @@ const commandDesc = `The usercenter server is used to manage users, keys, fees, 
 // NewApp App is the main application
 func NewApp(name string) *app.App {
 	opts := options.NewOptions()
-	application := app.NewApp(
-		name,
-		"Launch the usercenter service",
-		app.WithDescription("Launch the usercenter service"),
+	application := app.NewApp(name, "Launch the usercenter service",
+		app.WithDescription(commandDesc),
 		app.WithOptions(opts),
 		app.WithDefaultValidArgs(),
 		app.WithRunFunc(run(opts)),
@@ -29,7 +28,7 @@ func run(opts *options.Options) app.RunFunc {
 		if err != nil {
 			return err
 		}
-		return Run(cfg, nil)
+		return Run(cfg, genericapiserver.SetupSignalHandler())
 	}
 }
 

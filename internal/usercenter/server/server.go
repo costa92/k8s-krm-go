@@ -9,15 +9,16 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
 )
 
 // ProviderSet defines a wire provider set.
-var ProviderSet = wire.NewSet(NewServers, NewHTTPServer, NewMiddlewares)
+var ProviderSet = wire.NewSet(NewServers, NewHTTPServer, NewGRPCServer, NewMiddlewares)
 
-func NewServers(hs *http.Server) []transport.Server {
-	return []transport.Server{hs}
+func NewServers(hs *http.Server, gs *grpc.Server) []transport.Server {
+	return []transport.Server{hs, gs}
 }
 
 func NewMiddlewares(logger krtlog.Logger) []middleware.Middleware {

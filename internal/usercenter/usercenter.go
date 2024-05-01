@@ -17,6 +17,7 @@ var (
 
 type Config struct {
 	HTTPOptions *genericoptions.HTTPOptions
+	GRPCOption  *genericoptions.GRPCOptions
 }
 
 // completedConfig is a Config that has been completed with the necessary information
@@ -33,7 +34,9 @@ func (c completedConfig) New(stopCh <-chan struct{}) (*Server, error) {
 	appInfo := bootstrap.NewAppInfo(ID, Name, "v0.0.1")
 	conf := &server.Config{
 		HTTP: *c.HTTPOptions,
+		GRPC: *c.GRPCOption,
 	}
+	log.Infow("usercenter config", "http", conf.HTTP, "grpc", conf.GRPC)
 	app, cleanup, err := wireApp(appInfo, conf)
 	if err != nil {
 		return nil, err

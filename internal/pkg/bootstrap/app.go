@@ -5,7 +5,6 @@ import (
 
 	"github.com/go-kratos/kratos/v2"
 	krtlog "github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/google/wire"
 )
@@ -14,7 +13,6 @@ import (
 var ProviderSet = wire.NewSet(wire.Struct(new(AppConfig), "*"), NewLogger, NewApp)
 
 // AppInfo is the information of the application
-
 type AppInfo struct {
 	ID       string
 	Name     string
@@ -35,22 +33,22 @@ func NewAppInfo(id, name, version string) AppInfo {
 	}
 }
 
-// Config is the configuration of the application
+// AppConfig Config is the configuration of the application
 type AppConfig struct {
-	Info      AppInfo
-	Logger    krtlog.Logger
-	Registrar registry.Registrar
+	Info   AppInfo
+	Logger krtlog.Logger
+	//Registrar registry.Registrar
 }
 
 // NewApp creates a new kratos application
-func NewApp(appCfg AppConfig, servers ...transport.Server) *kratos.App {
+func NewApp(c AppConfig, servers ...transport.Server) *kratos.App {
 	return kratos.New(
-		kratos.ID(appCfg.Info.ID+"."+appCfg.Info.Name),
-		kratos.Name(appCfg.Info.Name),
-		kratos.Version(appCfg.Info.Version),
-		kratos.Metadata(appCfg.Info.Metadata),
-		kratos.Logger(appCfg.Logger),
-		kratos.Registrar(appCfg.Registrar),
+		kratos.ID(c.Info.ID+"."+c.Info.Name),
+		kratos.Name(c.Info.Name),
+		kratos.Version(c.Info.Version),
+		kratos.Metadata(c.Info.Metadata),
+		kratos.Logger(c.Logger),
+		//kratos.Registrar(c.Registrar),
 		kratos.Server(servers...),
 	)
 }

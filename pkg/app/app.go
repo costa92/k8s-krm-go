@@ -186,8 +186,8 @@ func (a *App) runCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	if a.options != nil {
-		// complete the configuration
-		if err := viper.BindPFlags(cmd.Flags()); err != nil {
+		//  viper Unmarshal
+		if err := viper.Unmarshal(a.options); err != nil {
 			return err
 		}
 		// complete the configuration
@@ -202,7 +202,6 @@ func (a *App) runCommand(cmd *cobra.Command, args []string) error {
 	// 初始化日志
 	log.Init(logOptions())
 	defer log.Sync() // sync 将缓存中的日志刷新到硬盘文件
-
 	if !a.silence {
 		log.Infow("Starting the app", "name", a.name)
 		log.Infow("Golang settings", "GOGC", os.Getenv("GOGC"), "GOMAXPROCS", os.Getenv("GOMAXPROCS"), "GOTRACEBACK", os.Getenv("GOTRACEBACK"))

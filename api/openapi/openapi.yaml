@@ -1,0 +1,69 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: UserService API
+    version: 0.0.1
+paths:
+    /v1/auth/login:
+        post:
+            tags:
+                - UserService
+            description: Login
+            operationId: UserService_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/usercenter.v1.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usercenter.v1.LoginReply'
+    /v1/auth/logout:
+        post:
+            tags:
+                - UserService
+            description: Logout
+            operationId: UserService_Logout
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/usercenter.v1.LogoutRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+components:
+    schemas:
+        usercenter.v1.LoginReply:
+            type: object
+            properties:
+                refreshToken:
+                    type: string
+                accessToken:
+                    type: string
+                type:
+                    type: string
+                expiresAt:
+                    type: integer
+                    format: int64
+        usercenter.v1.LoginRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+        usercenter.v1.LogoutRequest:
+            type: object
+            properties: {}
+tags:
+    - name: UserService
