@@ -94,6 +94,8 @@ github.com/go-kratos/aegis v0.2.0 h1:dObzCDWn3XVjUkgxyBp6ZeWtx/do0DPZ7LY3yNSJLUQ
 github.com/go-kratos/aegis v0.2.0/go.mod h1:v0R2m73WgEEYB3XYu6aE2WcMwsZkJ/Rzuf5eVccm7bI=
 github.com/go-kratos/grpc-gateway/v2 v2.5.1-0.20210811062259-c92d36e434b1 h1:jPqlxMJEoi8Yv4WIAhQNKczdKjADox8WKrTp3bJNjFM=
 github.com/go-kratos/grpc-gateway/v2 v2.5.1-0.20210811062259-c92d36e434b1/go.mod h1:qV5/s5A7wfY7GkNzptcUFRGAG4Y8H4mlXpSrOkDEIk0=
+github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2 v2.0.0-20240430092255-be624d035565 h1:Wkt3XNUUCIccFodkN8hablcjmCQDqDASjhr1c9DSyqE=
+github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2 v2.0.0-20240430092255-be624d035565/go.mod h1:ifCe/1CWeUvRFirb7dw0RMqAo8GbQc5aRkxzvBgzXLU=
 github.com/go-kratos/kratos/v2 v2.0.3/go.mod h1:Hgl0YPry9YyLtwTTfwLfowPKg+YS0dgZ06O5NHqz5hE=
 github.com/go-kratos/kratos/v2 v2.7.3 h1:T9MS69qk4/HkVUuHw5GS9PDVnOfzn+kxyF0CL5StqxA=
 github.com/go-kratos/kratos/v2 v2.7.3/go.mod h1:CQZ7V0qyVPwrotIpS5VNNUJNzEbcyRUl5pRtxLOIvn4=
@@ -626,6 +628,8 @@ google.golang.org/grpc v1.38.0/go.mod h1:NREThFqKR1f3iQ6oBuvc5LadQuXVGo9rkm5ZGrQ
 google.golang.org/grpc v1.39.0/go.mod h1:PImNr+rS9TWYb2O4/emRugxiyHZ5JyHW5F+RPnDzfrE=
 google.golang.org/grpc v1.59.0 h1:Z5Iec2pjwb+LEOqzpB2MR12/eKFhDPhuqW91O+4bwUk=
 google.golang.org/grpc v1.59.0/go.mod h1:aUPDwccQo6OTjy7Hct4AfBPD1GptF4fyUjIkQ9YtF98=
+google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.3.0 h1:rNBFJjBCOgVr9pWD7rs/knKL4FRTKgpZmsRfV214zcA=
+google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.3.0/go.mod h1:Dk1tviKTvMCz5tvh7t+fh94dhmQVHuCt2OzJB3CTW9Y=
 google.golang.org/protobuf v0.0.0-20200109180630-ec00e32a8dfd/go.mod h1:DFci5gLYBciE7Vtevhsrf46CRTquxDuWsQurQQe4oz8=
 google.golang.org/protobuf v0.0.0-20200221191635-4d8936d0db64/go.mod h1:kwYJMbMJ01Woi6D6+Kah6886xMZcty6N08ah7+eCXa0=
 google.golang.org/protobuf v0.0.0-20200228230310-ab0ca4ff8a60/go.mod h1:cfTl7dwQJ+fmap5saPgwCLgHXTUD7jkjRqWcaiX5VyM=

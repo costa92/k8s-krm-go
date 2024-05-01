@@ -1,6 +1,8 @@
 package server
 
 import (
+	"github.com/costa92/k8s-krm-go/internal/usercenter/service"
+	"github.com/costa92/k8s-krm-go/pkg/api/usercenter/v1"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/go-kratos/kratos/v2/transport/http/pprof"
@@ -9,7 +11,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func NewHTTPServer(c *Config, middlewares []middleware.Middleware) *http.Server {
+func NewHTTPServer(c *Config, gw *service.UserCenterService, middlewares []middleware.Middleware) *http.Server {
 	opts := []http.ServerOption{
 		http.Middleware(middlewares...),
 		http.Filter(handlers.CORS(
@@ -41,6 +43,6 @@ func NewHTTPServer(c *Config, middlewares []middleware.Middleware) *http.Server 
 	srv.Handle("/metrics", promhttp.Handler())
 	srv.Handle("", pprof.NewHandler())
 
-	v1.RegisterUserCenterHTTPServer(srv, gw)
+	v1.RegisterUserServiceHTTPServer(srv, gw)
 	return srv
 }
