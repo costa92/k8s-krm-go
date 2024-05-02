@@ -12,8 +12,11 @@ package usercenter
 
 import (
 	"github.com/costa92/k8s-krm-go/internal/pkg/bootstrap"
+	"github.com/costa92/k8s-krm-go/internal/usercenter/biz"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/server"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/service"
+	"github.com/costa92/k8s-krm-go/internal/usercenter/store"
+	"github.com/costa92/k8s-krm-go/pkg/db"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/google/wire"
 )
@@ -22,10 +25,14 @@ import (
 func wireApp(
 	bootstrap.AppInfo,
 	*server.Config,
+	*db.MySQLOptions,
 ) (*kratos.App, func(), error) {
 	wire.Build(
 		bootstrap.ProviderSet,
 		server.ProviderSet,
+		store.ProviderSet,
+		db.ProviderSet,
+		biz.ProviderSet,
 		service.ProviderSet,
 	)
 	return nil, nil, nil

@@ -17,21 +17,25 @@ type Options struct {
 	GRPCOptions *genericoptions.GRPCOptions `json:"grpc" mapstructure:"grpc"`
 	// HTTP options for configuring HTTP related options.
 	HTTPOptions *genericoptions.HTTPOptions `json:"http" mapstructure:"http"`
+	// MySQL
+	MySQLOptions *genericoptions.MySQLOptions `json:"mysql" mapstructure:"mysql"`
 	// Log options for configuring log related options.
 	Log *log.Options `json:"log" mapstructure:"log"`
 }
 
 func NewOptions() *Options {
 	return &Options{
-		GRPCOptions: genericoptions.NewGRPCOptions(),
-		HTTPOptions: genericoptions.NewHTTPOptions(),
-		Log:         log.NewOptions(),
+		GRPCOptions:  genericoptions.NewGRPCOptions(),
+		HTTPOptions:  genericoptions.NewHTTPOptions(),
+		MySQLOptions: genericoptions.NewMySQLOption(),
+		Log:          log.NewOptions(),
 	}
 }
 
 func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
 	o.GRPCOptions.AddFlags(fss.FlagSet("grpc"))
 	o.HTTPOptions.AddFlags(fss.FlagSet("http"))
+	o.MySQLOptions.AddFlags(fss.FlagSet("mysql"))
 	o.Log.AddFlags(fss.FlagSet("log"))
 	fs := fss.FlagSet("misc")
 	//client.AddFlags(fs)
@@ -47,6 +51,7 @@ func (o *Options) Validate() error {
 	var errs []error
 	errs = append(errs, o.GRPCOptions.Validate()...)
 	errs = append(errs, o.HTTPOptions.Validate()...)
+	errs = append(errs, o.MySQLOptions.Validate()...)
 	errs = append(errs, o.Log.Validate()...)
 	return utilerrors.NewAggregate(errs)
 }
@@ -55,6 +60,7 @@ func (o *Options) Validate() error {
 func (o *Options) ApplyTo(c *usercenter.Config) error {
 	c.HTTPOptions = o.HTTPOptions
 	c.GRPCOption = o.GRPCOptions
+	c.MySQLOptions = o.MySQLOptions
 	return nil
 }
 

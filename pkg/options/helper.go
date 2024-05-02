@@ -3,9 +3,18 @@ package options
 import (
 	"fmt"
 	"net"
+	"strings"
 
 	netutils "k8s.io/utils/net"
 )
+
+func join(prefixs ...string) string {
+	joined := strings.Join(prefixs, ".")
+	if joined != "" {
+		joined += "."
+	}
+	return joined
+}
 
 func ValidateAddress(addr string) error {
 	host, port, err := net.SplitHostPort(addr)

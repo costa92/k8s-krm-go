@@ -8,21 +8,30 @@ package usercenter
 
 import (
 	"github.com/costa92/k8s-krm-go/internal/pkg/bootstrap"
+	"github.com/costa92/k8s-krm-go/internal/usercenter/biz"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/server"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/service"
+	"github.com/costa92/k8s-krm-go/internal/usercenter/store"
+	"github.com/costa92/k8s-krm-go/pkg/db"
 	"github.com/go-kratos/kratos/v2"
 )
 
 // Injectors from wire.go:
 
 // wireApp creates a new kratos application with the necessary dependencies.
-func wireApp(appInfo bootstrap.AppInfo, config *server.Config) (*kratos.App, func(), error) {
+func wireApp(appInfo bootstrap.AppInfo, config *server.Config, mySQLOptions *db.MySQLOptions) (*kratos.App, func(), error) {
 	logger := bootstrap.NewLogger(appInfo)
 	appConfig := bootstrap.AppConfig{
 		Info:   appInfo,
 		Logger: logger,
 	}
-	userCenterService := service.NewUserCenterService()
+	gormDB, err := db.NewMySQL(mySQLOptions)
+	if err != nil {
+		return nil, nil, err
+	}
+	datastore := store.NewStore(gormDB)
+	bizBiz := biz.NewBiz(datastore)
+	userCenterService := service.NewUserCenterService(bizBiz)
 	v := server.NewMiddlewares(logger)
 	httpServer := server.NewHTTPServer(config, userCenterService, v)
 	grpcServer := server.NewGRPCServer(config, userCenterService, v)

@@ -1,13 +1,14 @@
 package usercenter
 
 import (
-	"github.com/costa92/k8s-krm-go/internal/usercenter/server"
-	"os"
-
 	"github.com/costa92/k8s-krm-go/internal/pkg/bootstrap"
+	"github.com/costa92/k8s-krm-go/internal/usercenter/server"
+	"github.com/costa92/k8s-krm-go/pkg/db"
 	"github.com/costa92/k8s-krm-go/pkg/log"
 	genericoptions "github.com/costa92/k8s-krm-go/pkg/options"
 	"github.com/go-kratos/kratos/v2"
+	"github.com/jinzhu/copier"
+	"os"
 )
 
 var (
@@ -16,8 +17,9 @@ var (
 )
 
 type Config struct {
-	HTTPOptions *genericoptions.HTTPOptions
-	GRPCOption  *genericoptions.GRPCOptions
+	HTTPOptions  *genericoptions.HTTPOptions
+	GRPCOption   *genericoptions.GRPCOptions
+	MySQLOptions *genericoptions.MySQLOptions
 }
 
 // completedConfig is a Config that has been completed with the necessary information
@@ -36,8 +38,12 @@ func (c completedConfig) New(stopCh <-chan struct{}) (*Server, error) {
 		HTTP: *c.HTTPOptions,
 		GRPC: *c.GRPCOption,
 	}
+
+	var dbOptions db.MySQLOptions
+	_ = copier.Copy(&dbOptions, c.MySQLOptions)
+
 	log.Infow("usercenter config", "http", conf.HTTP, "grpc", conf.GRPC)
-	app, cleanup, err := wireApp(appInfo, conf)
+	app, cleanup, err := wireApp(appInfo, conf, &dbOptions)
 	if err != nil {
 		return nil, err
 	}
