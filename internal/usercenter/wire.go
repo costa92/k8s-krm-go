@@ -17,6 +17,7 @@ import (
 	"github.com/costa92/k8s-krm-go/internal/usercenter/service"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/store"
 	"github.com/costa92/k8s-krm-go/pkg/db"
+	genericoptions "github.com/costa92/k8s-krm-go/pkg/options"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/google/wire"
 )
@@ -26,6 +27,7 @@ func wireApp(
 	bootstrap.AppInfo,
 	*server.Config,
 	*db.MySQLOptions,
+	*genericoptions.RedisOptions,
 ) (*kratos.App, func(), error) {
 	wire.Build(
 		bootstrap.ProviderSet,

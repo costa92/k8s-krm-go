@@ -13,13 +13,14 @@ import (
 	"github.com/costa92/k8s-krm-go/internal/usercenter/service"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/store"
 	"github.com/costa92/k8s-krm-go/pkg/db"
+	"github.com/costa92/k8s-krm-go/pkg/options"
 	"github.com/go-kratos/kratos/v2"
 )
 
 // Injectors from wire.go:
 
 // wireApp creates a new kratos application with the necessary dependencies.
-func wireApp(appInfo bootstrap.AppInfo, config *server.Config, mySQLOptions *db.MySQLOptions) (*kratos.App, func(), error) {
+func wireApp(appInfo bootstrap.AppInfo, config *server.Config, mySQLOptions *db.MySQLOptions, redisOptions *options.RedisOptions) (*kratos.App, func(), error) {
 	logger := bootstrap.NewLogger(appInfo)
 	appConfig := bootstrap.AppConfig{
 		Info:   appInfo,

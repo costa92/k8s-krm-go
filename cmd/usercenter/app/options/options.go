@@ -19,6 +19,8 @@ type Options struct {
 	HTTPOptions *genericoptions.HTTPOptions `json:"http" mapstructure:"http"`
 	// MySQL
 	MySQLOptions *genericoptions.MySQLOptions `json:"mysql" mapstructure:"mysql"`
+	// Redis
+	RedisOptions *genericoptions.RedisOptions `json:"redis" mapstructure:"redis"`
 	// Log options for configuring log related options.
 	Log *log.Options `json:"log" mapstructure:"log"`
 }
@@ -28,6 +30,7 @@ func NewOptions() *Options {
 		GRPCOptions:  genericoptions.NewGRPCOptions(),
 		HTTPOptions:  genericoptions.NewHTTPOptions(),
 		MySQLOptions: genericoptions.NewMySQLOption(),
+		RedisOptions: genericoptions.NewRedisOptions(),
 		Log:          log.NewOptions(),
 	}
 }
@@ -36,6 +39,7 @@ func (o *Options) Flags() (fss cliflag.NamedFlagSets) {
 	o.GRPCOptions.AddFlags(fss.FlagSet("grpc"))
 	o.HTTPOptions.AddFlags(fss.FlagSet("http"))
 	o.MySQLOptions.AddFlags(fss.FlagSet("mysql"))
+	o.RedisOptions.AddFlags(fss.FlagSet("redis"))
 	o.Log.AddFlags(fss.FlagSet("log"))
 	fs := fss.FlagSet("misc")
 	//client.AddFlags(fs)
@@ -52,6 +56,7 @@ func (o *Options) Validate() error {
 	errs = append(errs, o.GRPCOptions.Validate()...)
 	errs = append(errs, o.HTTPOptions.Validate()...)
 	errs = append(errs, o.MySQLOptions.Validate()...)
+	errs = append(errs, o.RedisOptions.Validate()...)
 	errs = append(errs, o.Log.Validate()...)
 	return utilerrors.NewAggregate(errs)
 }
@@ -61,6 +66,7 @@ func (o *Options) ApplyTo(c *usercenter.Config) error {
 	c.HTTPOptions = o.HTTPOptions
 	c.GRPCOption = o.GRPCOptions
 	c.MySQLOptions = o.MySQLOptions
+	c.RedisOptions = o.RedisOptions
 	return nil
 }
 

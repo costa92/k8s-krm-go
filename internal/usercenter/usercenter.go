@@ -20,6 +20,7 @@ type Config struct {
 	HTTPOptions  *genericoptions.HTTPOptions
 	GRPCOption   *genericoptions.GRPCOptions
 	MySQLOptions *genericoptions.MySQLOptions
+	RedisOptions *genericoptions.RedisOptions
 }
 
 // completedConfig is a Config that has been completed with the necessary information
@@ -43,7 +44,7 @@ func (c completedConfig) New(stopCh <-chan struct{}) (*Server, error) {
 	_ = copier.Copy(&dbOptions, c.MySQLOptions)
 
 	log.Infow("usercenter config", "http", conf.HTTP, "grpc", conf.GRPC)
-	app, cleanup, err := wireApp(appInfo, conf, &dbOptions)
+	app, cleanup, err := wireApp(appInfo, conf, &dbOptions, c.RedisOptions)
 	if err != nil {
 		return nil, err
 	}

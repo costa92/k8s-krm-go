@@ -8,3 +8,16 @@ mysql:
   database: krm # 数据库名称
   username: root # 数据库用户名
   password: s0kewK7Ph#0AE9IX # 数据库密码
+
+redis:
+  addr: 127.0.0.1:6379
+  database: 0
+  password: krm(#)666
+
+log: #
+  level: debug
+  format: console
+  enable-color: true
+  disable-caller: false
+  disable-stacktrace: false
+  output-paths: [stdout]
