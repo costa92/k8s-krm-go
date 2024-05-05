@@ -91,6 +91,8 @@ else
 	IMAGE_PLAT := $(PLATFORM)
 endif
 
+MANIFESTS_DIR=$(KRM_ROOT)/manifests
+SCRIPTS_DIR=$(KRM_ROOT)/scripts
 
 
 APIROOT ?= $(KRM_ROOT)/pkg/api

@@ -21,3 +21,12 @@ gen.protoc: ## Generate go source files from protobuf files.
 #		--proto_path=$(KRM_ROOT)/third_party \
 #		--grpc-gateway_out=paths=source_relative:$(APIROOT) \
 #		$(shell find $(APIROOT)/fakeserver -name *.proto)
+
+.PHONY: gen.ca.%
+gen.ca.%: ## Generate CA files.
+	$(eval CA := $(word 1,$(subst ., ,$*)))
+	@echo "===========> Generating CA files for $(CA)"
+	@${SCRIPTS_DIR}/gen-certs.sh generate-node-cert $(OUTPUT_DIR)/cert $(CA)
+
+.PHONY: gen.ca
+gen.ca: $(addprefix gen.ca., $(CERTIFICATES)) ## Generate all CA files.
