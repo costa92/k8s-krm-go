@@ -1,5 +1,7 @@
 package biz
 
+//go:generate mockgen -self_package github.com/costa92/k8s-krm-go/internal/usercenter/biz -destination mock_biz.go -package biz github.com/costa92/k8s-krm-go/internal/usercenter/biz IBiz
+
 import (
 	"github.com/costa92/k8s-krm-go/internal/usercenter/store"
 	"github.com/google/wire"

@@ -18,6 +18,8 @@ type transactionKey struct{}
 
 type IStore interface {
 	TX(ctx context.Context, fn func(ctx context.Context) error) error
+	// Users returns a UserStore on which user operations can be performed.
+	Users() UserStore
 }
 
 type datastore struct {
@@ -48,4 +50,9 @@ func (ds *datastore) TX(ctx context.Context, fn func(ctx context.Context) error)
 			return fn(ctx)
 		},
 	)
+}
+
+// Users returns a UserStore on which user operations can be performed.
+func (ds *datastore) Users() UserStore {
+	return newUserStore(ds)
 }

@@ -39,10 +39,8 @@ func (c completedConfig) New(stopCh <-chan struct{}) (*Server, error) {
 		HTTP: *c.HTTPOptions,
 		GRPC: *c.GRPCOption,
 	}
-
 	var dbOptions db.MySQLOptions
 	_ = copier.Copy(&dbOptions, c.MySQLOptions)
-
 	log.Infow("usercenter config", "http", conf.HTTP, "grpc", conf.GRPC)
 	app, cleanup, err := wireApp(appInfo, conf, &dbOptions, c.RedisOptions)
 	if err != nil {
