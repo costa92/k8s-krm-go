@@ -12,6 +12,7 @@ package usercenter
 
 import (
 	"github.com/costa92/k8s-krm-go/internal/pkg/bootstrap"
+	"github.com/costa92/k8s-krm-go/internal/usercenter/auth"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/biz"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/server"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/service"
@@ -27,7 +28,9 @@ func wireApp(
 	bootstrap.AppInfo,
 	*server.Config,
 	*db.MySQLOptions,
+	*genericoptions.JWTOptions,
 	*genericoptions.RedisOptions,
+	*genericoptions.KafkaOptions,
 ) (*kratos.App, func(), error) {
 	wire.Build(
 		bootstrap.ProviderSet,
@@ -36,6 +39,9 @@ func wireApp(
 		db.ProviderSet,
 		biz.ProviderSet,
 		service.ProviderSet,
+		auth.ProviderSet,
+		store.SetterProviderSet,
+		NewAuthenticator,
 	)
 	return nil, nil, nil
 }

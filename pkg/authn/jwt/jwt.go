@@ -125,7 +125,8 @@ type JWTAuth struct {
 	store Storer
 }
 
-func (a *JWTAuth) Issue(ctx context.Context, userID string) (authn.IToken, error) {
+// Sign is used to generate a token.
+func (a *JWTAuth) Sign(ctx context.Context, userID string) (authn.IToken, error) {
 	now := time.Now()
 	expiresAt := now.Add(a.opts.expired)
 

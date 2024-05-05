@@ -19,8 +19,11 @@ var (
 type Config struct {
 	HTTPOptions  *genericoptions.HTTPOptions
 	GRPCOption   *genericoptions.GRPCOptions
+	TLSOptions   *genericoptions.TLSOptions
+	JWTOptions   *genericoptions.JWTOptions
 	MySQLOptions *genericoptions.MySQLOptions
 	RedisOptions *genericoptions.RedisOptions
+	KafkaOptions *genericoptions.KafkaOptions
 }
 
 // completedConfig is a Config that has been completed with the necessary information
@@ -38,11 +41,12 @@ func (c completedConfig) New(stopCh <-chan struct{}) (*Server, error) {
 	conf := &server.Config{
 		HTTP: *c.HTTPOptions,
 		GRPC: *c.GRPCOption,
+		TLS:  *c.TLSOptions,
 	}
 	var dbOptions db.MySQLOptions
 	_ = copier.Copy(&dbOptions, c.MySQLOptions)
 	log.Infow("usercenter config", "http", conf.HTTP, "grpc", conf.GRPC)
-	app, cleanup, err := wireApp(appInfo, conf, &dbOptions, c.RedisOptions)
+	app, cleanup, err := wireApp(appInfo, conf, &dbOptions, c.JWTOptions, c.RedisOptions, c.KafkaOptions)
 	if err != nil {
 		return nil, err
 	}
