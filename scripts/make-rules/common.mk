@@ -91,6 +91,13 @@ else
 	IMAGE_PLAT := $(PLATFORM)
 endif
 
+
+
+# Specify components which need certificate
+ifeq ($(origin CERTIFICATES),undefined)
+CERTIFICATES=onex-apiserver admin
+endif
+
 MANIFESTS_DIR=$(KRM_ROOT)/manifests
 SCRIPTS_DIR=$(KRM_ROOT)/scripts
 

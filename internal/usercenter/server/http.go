@@ -50,6 +50,9 @@ func NewHTTPServer(c *Config, gw *service.UserCenterService, middlewares []middl
 	if c.HTTP.Addr != "" {
 		opts = append(opts, http.Address(c.HTTP.Addr))
 	}
+	if c.TLS.UseTLS {
+		opts = append(opts, http.TLSConfig(c.TLS.MustTLSConfig()))
+	}
 
 	srv := http.NewServer(opts...)
 	h := openapiv2.NewHandler()

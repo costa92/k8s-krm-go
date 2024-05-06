@@ -101,5 +101,5 @@ func (l *kafkaLogger) LogError(err error, msg ...string) {
 	if !l.IsEnabled() {
 		return
 	}
-	log.Errorw(err, msg...)
+	log.Errorw(err, "LogError", "msg", msg)
 }

@@ -21,3 +21,26 @@ log: #
   disable-caller: false
   disable-stacktrace: false
   output-paths: [stdout]
+
+tls:
+  use-tls: true # 是否启用 TLS
+  cert: _output/cert/usercente.pem  # TLS 证书路径
+  key: _output/cert/usercente-key.pem # TLS 私钥路径
+
+kafka:
+  brokers:  127.0.0.1:4317  # kafka 服务地址
+  topic: audit
+  timeout: 3s
+  # tls:
+  #mechanism:
+  #username:
+  #password:
+  #algorithm:
+  #compressed:
+  writer: # 使用默认值即可，不需要在 manifests/env.local 中配置
+    max-attempts: 10
+    required-acks: 1
+    async: true
+    batch-size: 100
+    batch-timeout: 1s
+    batch-bytes: 1024

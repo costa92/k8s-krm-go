@@ -25,8 +25,9 @@ gen.protoc: ## Generate go source files from protobuf files.
 .PHONY: gen.ca.%
 gen.ca.%: ## Generate CA files.
 	$(eval CA := $(word 1,$(subst ., ,$*)))
-	@echo "===========> Generating CA files for $(CA)"
+	@echo "===========> Generating CA files for $(CA) $(OUTPUT_DIR)"
 	@${SCRIPTS_DIR}/gen-certs.sh generate-node-cert $(OUTPUT_DIR)/cert $(CA)
 
+# make gen.ca CERTIFICATES=usercente
 .PHONY: gen.ca
 gen.ca: $(addprefix gen.ca., $(CERTIFICATES)) ## Generate all CA files.

@@ -23,7 +23,6 @@ function generate-node-cert() {
     local expiry=${3:-876000h} # 证书有效期
 
     mkdir -p "${cert_dir}"
-
     pushd "${cert_dir}" >/dev/null 2>&1  # 切换到证书文件保存的目录
 
 #    krm::util::ensure-cfssl
@@ -90,5 +89,5 @@ EOF
     # shellcheck disable=SC2119
      popd >/dev/null 2>&1
 }
-
-generate-node-cert "${LOCAL_OUTPUT_CAPATH}" "krm-apiserver" "876000h"
+# 生成证书
+$*

@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 
 KRM_ROOT=$(dirname "${BASH_SOURCE[0]}")/../..
+[[ -z ${COMMON_SOURCED} ]] && source ${KRM_ROOT}/scripts/installation/common.sh
+
+
 KRM_REDIS_HOST=${KRM_REDIS_PORT:-127.0.0.1}
 KRM_REDIS_PORT=${KRM_REDIS_PORT:-6379}
 KRM_PASSWORD=${KRM_PASSWORD:-krm(#)666}
 KRM_REDIS_DATA_DIR=${HOME}/Data
-
+# If common.sh has already been sourced, it will not be sourced again here.
 source "${KRM_ROOT}/scripts/lib/init.sh"
-# 确保 onex 容器网络存在。
-# 在 uninstall 时，可不删除 onex 容器网络，可以作为一个无害的无用数据
-krm::common::network()
-{
-  docker network ls |grep -q krm || docker network create krm
-}
+
 
 krm::redis::docker::install()
 {
