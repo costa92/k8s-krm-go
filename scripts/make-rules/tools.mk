@@ -1,4 +1,14 @@
 
+.PHONY: tools.print-manual-tool
+tools.print-manual-tool:
+	@echo "===========> The following tools may need to be installed manually:"
+	@echo $(MANUAL_INSTALL_TOOLS) | awk 'BEGIN{RS=" "} {printf("%15s%s\n","- ",$$0)}'
+
+.PHONY: tools.install.%
+tools.install.%: ## Install a specified tool.
+	@echo "===========> Installing $*"
+	@$(MAKE) _install.$*
+
 .PHONY: _install.gentool
 _install.gentool: ## Install gentool which is a tool used to generate gorm model and query code.
 	@$(GO) install gorm.io/gen/tools/gentool@$(GEN_TOOL_VERSION)
@@ -13,7 +23,7 @@ _install.cfssl: ## Install cfssl toolkit.
 
 
 .PHONY: _install.grpc
-_install.grpc:
+_install.grpc: ## Install grpc toolkit, includes multiple protoc plugins.
 	@$(GO) install google.golang.org/protobuf/cmd/protoc-gen-go@$(PROTOC_GEN_GO_VERSION)
 	@$(GO) install google.golang.org/grpc/cmd/protoc-gen-go-grpc@$(PROTOC_GEN_GO_GRPC_VERSION)
 	@$(GO) install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@$(GRPC_GATEWAY_VERSION)
@@ -33,3 +43,12 @@ _install.kratos: _install.grpc ## Install kratos toolkit, includes multiple prot
 .PHONY: _install.grpcurl
 _install.grpcurl:
 	@$(GO) install github.com/fullstorydev/grpcurl/cmd/grpcurl@$(GRPCURL_VERSION)
+
+.PHONY: _install.swagger
+_install.swagger:
+	@$(GO) install github.com/go-swagger/go-swagger/cmd/swagger@$(GO_SWAGGER_VERSION)
+
+
+.PHONY: tools.verify.%
+tools.verify.%: ## Verify a specified tool.
+	@if ! which $* &>/dev/null; then $(MAKE) tools.install.$*; fi

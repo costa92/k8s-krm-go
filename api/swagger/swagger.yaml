@@ -1,0 +1,94 @@
+consumes:
+    - application/json
+produces:
+    - application/json
+swagger: "2.0"
+info:
+    title: usercenter/v1/usercenter.proto
+    version: version not set
+paths:
+    /v1/auth/login:
+        post:
+            tags:
+                - UserService
+            summary: Login
+            operationId: UserService_Login
+            parameters:
+                - schema:
+                    $ref: '#/definitions/v1LoginRequest'
+                  name: body
+                  in: body
+                  required: true
+            responses:
+                "200":
+                    schema:
+                        $ref: '#/definitions/v1LoginReply'
+                    description: A successful response.
+                default:
+                    description: An unexpected error response.
+                    schema:
+                        $ref: '#/definitions/rpcStatus'
+    /v1/auth/logout:
+        post:
+            tags:
+                - UserService
+            summary: Logout
+            operationId: UserService_Logout
+            parameters:
+                - in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/v1LogoutRequest'
+                  name: body
+            responses:
+                "200":
+                    description: A successful response.
+                    schema:
+                        type: object
+                default:
+                    description: An unexpected error response.
+                    schema:
+                        $ref: '#/definitions/rpcStatus'
+definitions:
+    v1LoginRequest:
+        type: object
+        properties:
+            password:
+                type: string
+            username:
+                type: string
+    v1LogoutRequest:
+        type: object
+    protobufAny:
+        properties:
+            '@type':
+                type: string
+        additionalProperties: false
+        type: object
+    rpcStatus:
+        type: object
+        properties:
+            code:
+                type: integer
+                format: int32
+            details:
+                type: array
+                items:
+                    type: object
+                    $ref: '#/definitions/protobufAny'
+            message:
+                type: string
+    v1LoginReply:
+        type: object
+        properties:
+            access_token:
+                type: string
+            expiresAt:
+                type: string
+                format: int64
+            refresh_token:
+                type: string
+            type:
+                type: string
+tags:
+    - name: UserService

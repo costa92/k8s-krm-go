@@ -28,7 +28,6 @@ test: ## Run tests
 	@$(GO) test -v ./...
 
 ##@ Build
-
 .PHONY: build
 build: tidy ## Build the project.
 	$(MAKE) go.build
@@ -40,6 +39,16 @@ tidy: ## Tidy the project.
 .PHONY: targets
 targets: Makefile ## Show all Sub-makefile targets.
 	@for mk in `echo $(MAKEFILE_LIST) | sed 's/Makefile //g'`; do echo -e \\n\\033[35m$$mk\\033[0m; awk -F':.*##' '/^[0-9A-Za-z._-]+:.*?##/ { printf "  \033[36m%-45s\033[0m %s\n", $$1, $$2 } /^\$$\([0-9A-Za-z_-]+\):.*?##/ { gsub("_","-", $$1); printf "  \033[36m%-45s\033[0m %s\n", tolower(substr($$1, 3, length($$1)-7)), $$2 }' $$mk;done;
+
+
+.PHONY: swagger
+#swagger: gen.protoc
+swagger: ## Generate and aggregate swagger document.
+	@$(MAKE) swagger.run
+
+.PHONY: swagger.serve
+serve-swagger: ## Serve swagger spec and docs at 65534.
+	@$(MAKE) swagger.serve
 
 
 ##@ Help
