@@ -8,6 +8,7 @@ require (
 	github.com/casbin/casbin/v2 v2.88.0
 	github.com/casbin/gorm-adapter/v3 v3.24.0
 	github.com/casbin/redis-watcher/v2 v2.5.0
+	github.com/envoyproxy/protoc-gen-validate v1.0.2
 	github.com/fatih/color v1.14.1
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/gin-gonic/gin v1.9.1

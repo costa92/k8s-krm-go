@@ -5,6 +5,7 @@ package biz
 import (
 	"github.com/costa92/k8s-krm-go/internal/usercenter/auth"
 	authbiz "github.com/costa92/k8s-krm-go/internal/usercenter/biz/auth"
+	"github.com/costa92/k8s-krm-go/internal/usercenter/biz/user"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/store"
 	"github.com/costa92/k8s-krm-go/pkg/authn"
 	"github.com/google/wire"
@@ -14,6 +15,7 @@ import (
 var ProviderSet = wire.NewSet(NewBiz, wire.Bind(new(IBiz), new(*biz)))
 
 type IBiz interface {
+	Users() user.UserBiz
 	Auths() authbiz.AuthBiz
 }
 
@@ -30,4 +32,12 @@ func NewBiz(ds store.IStore, authn authn.Authenticator, auth auth.AuthProvider) 
 // Auths returns a new instance of the AuthBiz interface.
 func (b *biz) Auths() authbiz.AuthBiz {
 	return authbiz.New(b.ds, b.authn, b.auth)
+}
+
+func (b *biz) Users() user.UserBiz {
+	return user.New(b.ds)
+}
+
+func (b *biz) Secrets() user.UserBiz {
+	return user.New(b.ds)
 }

@@ -13,10 +13,12 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+// NewWhiteListMatcher returns a selector.MatchFunc that matches the whitelist. zh: 创建白名单匹配器
 func NewWhiteListMatcher() selector.MatchFunc {
 	whitelist := make(map[string]struct{})
 	whitelist[v1.OperationUserServiceLogin] = struct{}{}
 	whitelist[v1.OperationUserServiceLogout] = struct{}{}
+	whitelist[v1.OperationUserServiceCreateUser] = struct{}{}
 	return func(ctx context.Context, operation string) bool {
 		if _, ok := whitelist[operation]; ok {
 			return false

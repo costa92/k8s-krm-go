@@ -41,8 +41,40 @@ paths:
                 "200":
                     description: OK
                     content: {}
+    /v1/users:
+        post:
+            tags:
+                - UserService
+            description: Create
+            operationId: UserService_CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/usercenter.v1.CreateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usercenter.v1.UserReply'
 components:
     schemas:
+        usercenter.v1.CreateUserRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                nickname:
+                    type: string
+                password:
+                    type: string
+                email:
+                    type: string
+                phone:
+                    type: string
         usercenter.v1.LoginReply:
             type: object
             properties:
@@ -65,5 +97,29 @@ components:
         usercenter.v1.LogoutRequest:
             type: object
             properties: {}
+        usercenter.v1.UserReply:
+            type: object
+            properties:
+                userID:
+                    type: string
+                username:
+                    type: string
+                nickname:
+                    type: string
+                password:
+                    type: string
+                email:
+                    type: string
+                phone:
+                    type: string
+                secrets:
+                    type: integer
+                    format: int64
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
 tags:
     - name: UserService

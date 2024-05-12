@@ -6,7 +6,7 @@ package usercenter.v1;
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
-//import "validate/validate.proto";
+import "validate/validate.proto";
 
 option go_package = "github.com/costa92/k8s-krm-go/pkg/api/usercenter/v1;v1";
 
@@ -27,7 +27,24 @@ service UserService {
       body: "*",
     };
   }
+
+  // Create
+  rpc CreateUser(CreateUserRequest) returns (UserReply) {
+    option (google.api.http) = {
+      post: "/v1/users",
+      body: "*",
+    };
+  }
 }
+
+message CreateUserRequest {
+  string username  = 1 [(validate.rules).string = {min_len: 1, max_len: 253}];
+  string nickname  = 2 [(validate.rules).string = {min_len: 1, max_len: 253}];
+  string password  = 3 [(validate.rules).string = {min_len: 6, max_len: 16}];
+  string email     = 4 [(validate.rules).string.email = true];
+  string phone     = 5 [(validate.rules).string.len = 11 ];
+}
+
 
 message UserReply {
   string userID = 1;

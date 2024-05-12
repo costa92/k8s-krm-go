@@ -20,10 +20,12 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationUserServiceCreateUser = "/usercenter.v1.UserService/CreateUser"
 const OperationUserServiceLogin = "/usercenter.v1.UserService/Login"
 const OperationUserServiceLogout = "/usercenter.v1.UserService/Logout"
 
 type UserServiceHTTPServer interface {
+	CreateUser(context.Context, *CreateUserRequest) (*UserReply, error)
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
 }
@@ -32,6 +34,7 @@ func RegisterUserServiceHTTPServer(s *http.Server, srv UserServiceHTTPServer) {
 	r := s.Route("/")
 	r.POST("/v1/auth/login", _UserService_Login0_HTTP_Handler(srv))
 	r.POST("/v1/auth/logout", _UserService_Logout0_HTTP_Handler(srv))
+	r.POST("/v1/users", _UserService_CreateUser0_HTTP_Handler(srv))
 }
 
 func _UserService_Login0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
@@ -72,7 +75,27 @@ func _UserService_Logout0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.
 	}
 }
 
+func _UserService_CreateUser0_HTTP_Handler(srv UserServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateUserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserServiceCreateUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CreateUser(ctx, req.(*CreateUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type UserServiceHTTPClient interface {
+	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *UserReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	Logout(ctx context.Context, req *LogoutRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 }
@@ -83,6 +106,19 @@ type UserServiceHTTPClientImpl struct {
 
 func NewUserServiceHTTPClient(client *http.Client) UserServiceHTTPClient {
 	return &UserServiceHTTPClientImpl{client}
+}
+
+func (c *UserServiceHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...http.CallOption) (*UserReply, error) {
+	var out UserReply
+	pattern := "/v1/users"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserServiceCreateUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
 }
 
 func (c *UserServiceHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginReply, error) {
