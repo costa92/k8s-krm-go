@@ -8,6 +8,8 @@ gen.protoc: ## Generate go source files from protobuf files.
 		--go_out=paths=source_relative:$(APIROOT) \
 		--go-http_out=paths=source_relative:$(APIROOT) \
 		--go-grpc_out=paths=source_relative:$(APIROOT) \
+		--go-errors_out=paths=source_relative:$(APIROOT) \
+        --go-errors-code_out=paths=source_relative:$(KRM_ROOT)/docs/guide/zh-CN/api/errors-code \
 		--validate_out=paths=source_relative,lang=go:$(APIROOT) \
 		--openapi_out=fq_schema_naming=true,default_response=false:$(KRM_ROOT)/api/openapi \
 		--openapiv2_out=$(KRM_ROOT)/api/openapi \

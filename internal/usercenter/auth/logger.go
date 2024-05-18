@@ -52,7 +52,7 @@ func (l *kafkaLogger) IsEnabled() bool {
 	return atomic.LoadInt32(&l.enabled) == 1
 }
 
-// LogEnforce writes a log message for a policy enforcement decision.
+// LogModel  writes a log message for a policy enforcement decision.
 func (l *kafkaLogger) LogModel(model [][]string) {
 	if !l.IsEnabled() {
 		return
@@ -60,7 +60,7 @@ func (l *kafkaLogger) LogModel(model [][]string) {
 	log.Debugw("LogModel", "model", model)
 }
 
-// LogModel writes a log message for the policy model.
+// LogEnforce writes a log message for the policy model.
 func (l *kafkaLogger) LogEnforce(matcher string, request []any, result bool, explains [][]string) {
 	if !l.IsEnabled() {
 		return
