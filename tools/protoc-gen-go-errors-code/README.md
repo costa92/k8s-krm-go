@@ -21,3 +21,6 @@
     protoc 	--go-errors_out=paths=source_relative:$(APIROOT) \
             --go-errors-code_out=paths=source_relative:$(KRM_ROOT)/docs/guide/zh-CN/api/errors-code
     ```
+
+## 参考
+    https://github.com/lyouthzzz/protoc-gen-go-errors
