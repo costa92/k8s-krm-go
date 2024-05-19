@@ -42,10 +42,33 @@ paths:
                     description: OK
                     content: {}
     /v1/users:
+        get:
+            tags:
+                - UserService
+            description: ListUser
+            operationId: UserService_ListUser
+            parameters:
+                - name: limit
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: offset
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usercenter.v1.ListUserResponse'
         post:
             tags:
                 - UserService
-            description: Create
+            description: CreateUser
             operationId: UserService_CreateUser
             requestBody:
                 content:
@@ -53,6 +76,25 @@ paths:
                         schema:
                             $ref: '#/components/schemas/usercenter.v1.CreateUserRequest'
                 required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usercenter.v1.UserReply'
+    /v1/users/{username}:
+        get:
+            tags:
+                - UserService
+            description: GetUser
+            operationId: UserService_GetUser
+            parameters:
+                - name: username
+                  in: path
+                  required: true
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -75,6 +117,16 @@ components:
                     type: string
                 phone:
                     type: string
+        usercenter.v1.ListUserResponse:
+            type: object
+            properties:
+                totalCount:
+                    type: integer
+                    format: int64
+                Users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/usercenter.v1.UserReply'
         usercenter.v1.LoginReply:
             type: object
             properties:

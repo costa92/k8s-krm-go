@@ -7,7 +7,12 @@ import (
 )
 
 type UserBiz interface {
+	// Create creates a new user.
 	Create(ctx context.Context, user *v1.CreateUserRequest) (*v1.UserReply, error)
+	// Get returns the user by username.
+	Get(ctx context.Context, req *v1.GetUserRequest) (*v1.UserReply, error)
+	// List returns a list of users.
+	List(ctx context.Context, req *v1.ListUserRequest) (*v1.ListUserResponse, error)
 }
 
 type userBiz struct {
