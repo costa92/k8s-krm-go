@@ -4,9 +4,9 @@
 
 ## 安装
 
-    ```sh
-    go install github.com/costa92/k8s-krm-go/tools/protoc-gen-go-errors-code
-    ```
+```sh
+go install github.com/costa92/k8s-krm-go/tools/protoc-gen-go-errors-code
+```
 
 ## 使用
     `path/to/your/protos` 是定义 protoc 插件的 proto 文件的目录，`path/to/your/` 是生成的 Go 语言错误码定义文件的目录。
