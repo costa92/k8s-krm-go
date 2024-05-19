@@ -16,7 +16,7 @@ gen.protoc: ## Generate go source files from protobuf files.
 		--openapiv2_opt=logtostderr=true \
 		--openapiv2_opt=json_names_for_fields=false \
 		$(shell find $(APIROOT) -name *.proto)
-	# Only onex-fake-server use grpc-gateway
+
 #	@protoc \
 #		--proto_path=$(APIROOT) \
 #		--proto_path=$(APISROOT) \
