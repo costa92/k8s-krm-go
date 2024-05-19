@@ -4,20 +4,21 @@
 
 ## 安装
 
-    ```shell
+    ```sh
     go install github.com/costa92/k8s-krm-go/tools/protoc-gen-go-errors-code
     ```
 
 ## 使用
     `path/to/your/protos` 是定义 protoc 插件的 proto 文件的目录，`path/to/your/` 是生成的 Go 语言错误码定义文件的目录。
     `path/to/your/docs` 是生成的错误码文档的目录。
-    ```shell
+
+    ```sh
     protoc --go-errors-code_out=paths=source_relative:. path/to/your/protos \
            --go-errors-code_out=paths=source_relative:. path/to/your/docs
     ```
 ## example
 
-    ```shell
+    ```sh
     protoc 	--go-errors_out=paths=source_relative:$(APIROOT) \
             --go-errors-code_out=paths=source_relative:$(KRM_ROOT)/docs/guide/zh-CN/api/errors-code
     ```
