@@ -2,7 +2,9 @@ package validation
 
 import (
 	"context"
+	"fmt"
 	"github.com/costa92/k8s-krm-go/internal/pkg/known"
+	"github.com/costa92/k8s-krm-go/internal/pkg/known/usercenter"
 	"github.com/costa92/k8s-krm-go/internal/pkg/krmx"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/locales"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/store"
@@ -12,6 +14,10 @@ import (
 
 type validator struct {
 	ds store.IStore
+}
+
+func New(ds store.IStore) (*validator, error) {
+	return &validator{ds: ds}, nil
 }
 
 func (vd *validator) ValidateCreateUserRequest(ctx context.Context, rq *v1.CreateUserRequest) error {
@@ -28,4 +34,15 @@ func (vd *validator) ValidateListUserRequest(ctx context.Context, rq *v1.ListUse
 	}
 	return nil
 
+}
+
+func (vd *validator) ValidateCreateSecretRequest(ctx context.Context, rq *v1.GetUserRequest) error {
+	_, secrets, err := vd.ds.Secret().List(ctx, krmx.FromUserID(ctx))
+	if err != nil {
+		return err
+	}
+	if len(secrets) >= usercenter.MaxSecretCount {
+		return fmt.Errorf("secret reach the max count %d", usercenter.MaxSecretCount)
+	}
+	return nil
 }
