@@ -8,11 +8,13 @@ package usercenter
 
 import (
 	"github.com/costa92/k8s-krm-go/internal/pkg/bootstrap"
+	validation2 "github.com/costa92/k8s-krm-go/internal/pkg/validation"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/auth"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/biz"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/server"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/service"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/store"
+	"github.com/costa92/k8s-krm-go/internal/usercenter/validation"
 	"github.com/costa92/k8s-krm-go/pkg/db"
 	"github.com/costa92/k8s-krm-go/pkg/options"
 	"github.com/go-kratos/kratos/v2"
@@ -55,7 +57,13 @@ func wireApp(appInfo bootstrap.AppInfo, config *server.Config, mySQLOptions *db.
 	authAuth := auth.NewAuth(authnImpl, authzImpl)
 	bizBiz := biz.NewBiz(datastore, authenticator, authAuth)
 	userCenterService := service.NewUserCenterService(bizBiz)
-	v := server.NewMiddlewares(logger, authenticator)
+	validator, err := validation.New(datastore)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	validationValidator := validation2.New(validator)
+	v := server.NewMiddlewares(logger, authenticator, validationValidator)
 	httpServer := server.NewHTTPServer(config, userCenterService, v)
 	grpcServer := server.NewGRPCServer(config, userCenterService, v)
 	v2 := server.NewServers(httpServer, grpcServer)

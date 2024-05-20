@@ -10,7 +10,11 @@ import (
 	"github.com/costa92/k8s-krm-go/internal/usercenter/store"
 	v1 "github.com/costa92/k8s-krm-go/pkg/api/usercenter/v1"
 	"github.com/costa92/k8s-krm-go/pkg/i18n"
+	"github.com/costa92/k8s-krm-go/pkg/log"
+	"github.com/google/wire"
 )
+
+var ProviderSet = wire.NewSet(New, wire.Bind(new(any), new(*validator)))
 
 type validator struct {
 	ds store.IStore
@@ -20,8 +24,10 @@ func New(ds store.IStore) (*validator, error) {
 	return &validator{ds: ds}, nil
 }
 
+// ValidateCreateUserRequest validates the CreateUserRequest. It checks if the user already exists.
 func (vd *validator) ValidateCreateUserRequest(ctx context.Context, rq *v1.CreateUserRequest) error {
 	if _, err := vd.ds.Users().GetByUsername(ctx, rq.Username); err == nil {
+		log.C(ctx).Warnf("user already exists: %s", rq.Username)
 		return i18n.FromContext(ctx).E(locales.UserAlreadyExists)
 	}
 	return nil

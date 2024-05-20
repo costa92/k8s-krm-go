@@ -12,11 +12,13 @@ package usercenter
 
 import (
 	"github.com/costa92/k8s-krm-go/internal/pkg/bootstrap"
+	"github.com/costa92/k8s-krm-go/internal/pkg/validation"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/auth"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/biz"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/server"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/service"
 	"github.com/costa92/k8s-krm-go/internal/usercenter/store"
+	usercentervalidation "github.com/costa92/k8s-krm-go/internal/usercenter/validation"
 	"github.com/costa92/k8s-krm-go/pkg/db"
 	genericoptions "github.com/costa92/k8s-krm-go/pkg/options"
 	"github.com/go-kratos/kratos/v2"
@@ -42,6 +44,8 @@ func wireApp(
 		auth.ProviderSet,
 		store.SetterProviderSet,
 		NewAuthenticator,
+		validation.ProviderSet,
+		usercentervalidation.ProviderSet,
 	)
 	return nil, nil, nil
 }

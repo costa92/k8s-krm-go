@@ -21,6 +21,7 @@ import (
 	"golang.org/x/text/language"
 
 	i18nmw "github.com/costa92/k8s-krm-go/internal/pkg/middleware/i18n"
+	"github.com/costa92/k8s-krm-go/internal/pkg/middleware/validate"
 )
 
 // ProviderSet defines a wire provider set.
@@ -30,7 +31,7 @@ func NewServers(hs *http.Server, gs *grpc.Server) []transport.Server {
 	return []transport.Server{hs, gs}
 }
 
-func NewMiddlewares(logger krtlog.Logger, a authn.Authenticator) []middleware.Middleware {
+func NewMiddlewares(logger krtlog.Logger, a authn.Authenticator, v validate.IValidator) []middleware.Middleware {
 	return []middleware.Middleware{
 		recovery.Recovery(
 			recovery.WithHandler(func(ctx context.Context, rq, err any) error {
@@ -42,6 +43,7 @@ func NewMiddlewares(logger krtlog.Logger, a authn.Authenticator) []middleware.Mi
 		i18nmw.Translator(i18n.WithLanguage(language.English), i18n.WithFS(locales.Locales)),
 		ratelimit.Server(),
 		selector.Server(jwt.Server(a)).Match(NewWhiteListMatcher()).Build(),
+		validate.Validator(v),
 		logging.Server(logger),
 	}
 }
