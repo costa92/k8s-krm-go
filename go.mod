@@ -42,11 +42,11 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.6
 	gorm.io/gorm v1.25.9
-	k8s.io/apimachinery v0.30.0
-	k8s.io/apiserver v0.30.0
-	k8s.io/client-go v0.30.0
-	k8s.io/code-generator v0.30.0
-	k8s.io/component-base v0.30.0
+	k8s.io/apimachinery v0.29.5
+	k8s.io/apiserver v0.29.5
+	k8s.io/client-go v0.29.5
+	k8s.io/code-generator v0.29.5
+	k8s.io/component-base v0.29.5
 	k8s.io/klog/v2 v2.120.1
 	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340
 	k8s.io/kubernetes v1.30.1
