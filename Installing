@@ -1,0 +1,19 @@
+Makefile:# ==============================
+Makefile:#  ==============================
+scripts/make-rules/swagger.mk:# ==============================================================================
+scripts/make-rules/swagger.mk:	@echo "===========> Generating swagger API docs"
+scripts/make-rules/generate.mk:	@echo "===========> Generating CA files for $(CA) $(OUTPUT_DIR)"
+scripts/make-rules/common-version.mk:# ==============================================================================
+scripts/make-rules/tools.mk:	@echo "===========> The following tools may need to be installed manually:"
+scripts/make-rules/tools.mk:	@echo "===========> Installing $*"
+scripts/make-rules/common.mk:# ===================
+scripts/make-rules/common.mk:# ==============================
+scripts/make-rules/common.mk:# ==============================
+scripts/make-rules/common.mk:$(info ===========> Installing $(1)@$(2))
+scripts/make-rules/golang.mk:#  ==============================
+scripts/make-rules/golang.mk:#  ==============================
+scripts/make-rules/golang.mk:		echo "===========> Building binary $(COMMAND) $(VERSION) for $(OS) $(ARCH)" ; \
+scripts/make-rules/golang.mk:		echo "===========> Done building binary BINS for $(BINS)" ; \
+scripts/make-rules/golang.mk:		echo "===========> Done building binary $(COMMAND) $(VERSION) for $(OS) $(ARCH)" ; \
+third_party/google/protobuf/descriptor.proto:// ===================================================================
+third_party/google/protobuf/descriptor.proto:// ===================================================================
